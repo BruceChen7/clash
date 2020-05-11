@@ -1,6 +1,7 @@
 package constant
 
 import (
+	G "github.com/Dreamacro/clash/log"
 	"os"
 	P "path"
 	"path/filepath"
@@ -16,6 +17,7 @@ type path struct {
 	configFile string
 }
 
+// 加载这个文件会初始化
 func init() {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
@@ -23,6 +25,7 @@ func init() {
 	}
 
 	homeDir = P.Join(homeDir, ".config", Name)
+	G.Infoln("homeDir...", homeDir)
 	Path = &path{homeDir: homeDir, configFile: "config.yaml"}
 }
 

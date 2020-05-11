@@ -11,6 +11,7 @@ import (
 var defaultAllocator *Allocator
 
 func init() {
+    // 创建一个默的分配器
 	defaultAllocator = NewAllocator()
 }
 
@@ -61,5 +62,6 @@ func (alloc *Allocator) Put(buf []byte) error {
 
 // msb return the pos of most significiant bit
 func msb(size int) uint16 {
+    // 返回二进制的最高位位置
 	return uint16(bits.Len32(uint32(size)) - 1)
 }

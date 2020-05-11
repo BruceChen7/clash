@@ -6,12 +6,14 @@ import (
 	"time"
 )
 
+// 一个带有过期的的概念
 // Cache store element with a expired time
 type Cache struct {
 	*cache
 }
 
 type cache struct {
+	// 线程安全的mapping
 	mapping sync.Map
 	janitor *janitor
 }
@@ -21,6 +23,7 @@ type element struct {
 	Payload interface{}
 }
 
+// interface{}表示的是一种泛型
 // Put element in Cache with its ttl
 func (c *cache) Put(key interface{}, payload interface{}, ttl time.Duration) {
 	c.mapping.Store(key, &element{

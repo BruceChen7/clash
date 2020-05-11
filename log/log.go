@@ -10,9 +10,11 @@ import (
 )
 
 var (
-	logCh  = make(chan interface{})
+	logCh = make(chan interface{})
+	// 定义一个主题
 	source = observable.NewObservable(logCh)
-	level  = INFO
+	// 默认是INFO的日志级别
+	level = INFO
 )
 
 func init() {
@@ -22,7 +24,8 @@ func init() {
 
 type Event struct {
 	LogLevel LogLevel
-	Payload  string
+	// 有效的消息body
+	Payload string
 }
 
 func (e *Event) Type() string {
@@ -32,6 +35,7 @@ func (e *Event) Type() string {
 func Infoln(format string, v ...interface{}) {
 	event := newLog(INFO, format, v...)
 	logCh <- event
+	// 打印每个事件
 	print(event)
 }
 
@@ -58,6 +62,7 @@ func Fatalln(format string, v ...interface{}) {
 }
 
 func Subscribe() observable.Subscription {
+	// 返回一个可读的channel
 	sub, _ := source.Subscribe()
 	return sub
 }
@@ -76,12 +81,15 @@ func SetLevel(newLevel LogLevel) {
 }
 
 func print(data *Event) {
+	// 如果数据事件本身的日志级别
 	if data.LogLevel < level {
 		return
 	}
 
+	// 根据日志
 	switch data.LogLevel {
 	case INFO:
+		// 使用第三方库来打印
 		log.Infoln(data.Payload)
 	case WARNING:
 		log.Warnln(data.Payload)

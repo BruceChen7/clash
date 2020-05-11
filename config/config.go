@@ -133,6 +133,7 @@ func Parse(buf []byte) (*Config, error) {
 
 func UnmarshalRawConfig(buf []byte) (*RawConfig, error) {
 	// config with some default value
+	// 默认的代理配置
 	rawCfg := &RawConfig{
 		AllowLan:       false,
 		BindAddress:    "*",

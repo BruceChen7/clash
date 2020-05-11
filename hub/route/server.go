@@ -40,12 +40,14 @@ func SetUIPath(path string) {
 }
 
 func Start(addr string, secret string) {
+    log.Errorln("....", addr, "....", serverAddr)
 	if serverAddr != "" {
 		return
 	}
 
 	serverAddr = addr
 	serverSecret = secret
+    log.Infoln("....", addr, "....", serverAddr)
 
 	r := chi.NewRouter()
 

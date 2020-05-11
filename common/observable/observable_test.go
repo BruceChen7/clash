@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// 定义一个生成器
 func iterator(item []interface{}) chan interface{} {
 	ch := make(chan interface{})
 	go func() {
@@ -23,19 +24,25 @@ func iterator(item []interface{}) chan interface{} {
 
 func TestObservable(t *testing.T) {
 	iter := iterator([]interface{}{1, 2, 3, 4, 5})
+	// 生成观察者主题
+	// 主题的发生序列是iter生成的
 	src := NewObservable(iter)
+	// 订阅者订阅
 	data, err := src.Subscribe()
 	assert.Nil(t, err)
 	count := 0
 	for range data {
 		count++
 	}
+	// 确认接收的数量为5个
 	assert.Equal(t, count, 5)
 }
 
 func TestObservable_MutilSubscribe(t *testing.T) {
 	iter := iterator([]interface{}{1, 2, 3, 4, 5})
+	// 定一个主题
 	src := NewObservable(iter)
+	// 有两个订阅者
 	ch1, _ := src.Subscribe()
 	ch2, _ := src.Subscribe()
 	count := 0
@@ -51,6 +58,7 @@ func TestObservable_MutilSubscribe(t *testing.T) {
 	go waitCh(ch1)
 	go waitCh(ch2)
 	wg.Wait()
+	// 确认接收10个
 	assert.Equal(t, count, 10)
 }
 

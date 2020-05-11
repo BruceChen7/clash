@@ -11,6 +11,7 @@ import (
 func TestCache_Basic(t *testing.T) {
 	interval := 200 * time.Millisecond
 	ttl := 20 * time.Millisecond
+	// 船舰一个cache
 	c := New(interval)
 	c.Put("int", 1, ttl)
 	c.Put("string", "a", ttl)
@@ -33,11 +34,13 @@ func TestCache_TTL(t *testing.T) {
 	i := c.Get("int")
 	_, expired := c.GetWithExpire("int2")
 	assert.Equal(t, i.(int), 1, "should recv 1")
+	// 确定没有过期
 	assert.True(t, now.Before(expired))
 
 	time.Sleep(ttl * 2)
 	i = c.Get("int")
 	j, _ := c.GetWithExpire("int2")
+	// 确定过期
 	assert.Nil(t, i, "should recv nil")
 	assert.Nil(t, j, "should recv nil")
 }

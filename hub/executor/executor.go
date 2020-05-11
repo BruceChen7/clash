@@ -22,6 +22,7 @@ import (
 
 // forward compatibility before 1.0
 func readRawConfig(path string) ([]byte, error) {
+    // 直接读取整个文件
 	data, err := ioutil.ReadFile(path)
 	if err == nil && len(data) != 0 {
 		return data, nil
@@ -40,9 +41,11 @@ func readRawConfig(path string) ([]byte, error) {
 }
 
 func readConfig(path string) ([]byte, error) {
+    // 查看文件是否存在
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		return nil, err
 	}
+    // 读取整个文件
 	data, err := readRawConfig(path)
 	if err != nil {
 		return nil, err

@@ -60,15 +60,19 @@ func main() {
 
 	if configFile != "" {
 		if !filepath.IsAbs(configFile) {
+			// 获取当前目录
 			currentDir, _ := os.Getwd()
+			// 根据当前路径来产生绝对路径
 			configFile = filepath.Join(currentDir, configFile)
 		}
 		C.SetConfig(configFile)
 	} else {
+		// 设置默认的文件路径
 		configFile := filepath.Join(C.Path.HomeDir(), C.Path.Config())
 		C.SetConfig(configFile)
 	}
 
+	// 创建目录
 	if err := config.Init(C.Path.HomeDir()); err != nil {
 		log.Fatalln("Initial configuration directory error: %s", err.Error())
 	}
@@ -85,12 +89,15 @@ func main() {
 
 	var options []hub.Option
 	if flagset["ext-ui"] {
+		log.Infoln("has ext-uti")
 		options = append(options, hub.WithExternalUI(externalUI))
 	}
 	if flagset["ext-ctl"] {
+		log.Infoln("has ext-ctl")
 		options = append(options, hub.WithExternalController(externalController))
 	}
 	if flagset["secret"] {
+		log.Infoln("has secret")
 		options = append(options, hub.WithSecret(secret))
 	}
 

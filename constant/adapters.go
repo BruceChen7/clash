@@ -26,6 +26,7 @@ const (
 	LoadBalance
 )
 
+// 是一个接口
 type ServerAdapter interface {
 	net.Conn
 	Metadata() *Metadata

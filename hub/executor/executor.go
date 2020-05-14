@@ -65,6 +65,7 @@ func Parse() (*config.Config, error) {
 
 // ParseWithPath parse config with custom config path
 func ParseWithPath(path string) (*config.Config, error) {
+    // 读取配置文件
 	buf, err := readConfig(path)
 	if err != nil {
 		return nil, err

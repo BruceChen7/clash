@@ -19,6 +19,7 @@ type inMemoryAuthenticator struct {
 	usernames []string
 }
 
+// 基本鉴权方式
 func (au *inMemoryAuthenticator) Verify(user string, pass string) bool {
 	realPass, ok := au.storage.Load(user)
 	return ok && realPass == pass

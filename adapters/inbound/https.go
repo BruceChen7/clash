@@ -11,6 +11,7 @@ import (
 func NewHTTPS(request *http.Request, conn net.Conn) *SocketAdapter {
 	metadata := parseHTTPAddr(request)
 	metadata.Type = C.HTTPCONNECT
+    // 设置源端口和与源地址
 	if ip, port, err := parseAddr(conn.RemoteAddr().String()); err == nil {
 		metadata.SrcIP = ip
 		metadata.SrcPort = port

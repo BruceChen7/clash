@@ -122,6 +122,7 @@ func process() {
 		go processUDP()
 	}
 
+    // 取出一个adaptor
 	queue := tcpQueue.Out()
 	for elm := range queue {
 		conn := elm.(C.ServerAdapter)

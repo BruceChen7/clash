@@ -121,6 +121,7 @@ type RawConfig struct {
 	RuleOld          []string                          `yaml:"Rule"`
 }
 
+// 解析配置文件
 // Parse config
 func Parse(buf []byte) (*Config, error) {
 	rawCfg, err := UnmarshalRawConfig(buf)
@@ -170,6 +171,7 @@ func UnmarshalRawConfig(buf []byte) (*RawConfig, error) {
 		return nil, err
 	}
 
+    log.Infoln("...port, ", rawCfg.Port)
 	return rawCfg, nil
 }
 

@@ -40,6 +40,7 @@ func SetUIPath(path string) {
 }
 
 func Start(addr string, secret string) {
+    log.Infoln("why not start")
     log.Errorln("....", addr, "....", serverAddr)
 	if serverAddr != "" {
 		return

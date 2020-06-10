@@ -81,6 +81,7 @@ func ReCreateSocks(port int) error {
 
 	if socksListener != nil {
 		if socksListener.Address() != addr {
+			// 关闭之前的
 			socksListener.Close()
 			socksListener = nil
 		} else {
@@ -116,6 +117,7 @@ func ReCreateSocks(port int) error {
 		return err
 	}
 
+	// 设置tcp监听器
 	socksListener = tcpListener
 	socksUDPListener = udpListener
 
@@ -200,6 +202,6 @@ func genAddr(host string, port int, allowLan bool) string {
 			return fmt.Sprintf("%s:%d", host, port)
 		}
 	}
-
+	// 监听本地地址
 	return fmt.Sprintf("127.0.0.1:%d", port)
 }

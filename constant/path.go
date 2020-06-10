@@ -19,16 +19,17 @@ type path struct {
 
 // 加载这个文件会初始化
 func init() {
-    // 获取用户的主目录
+	// 获取用户的主目录
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
+		// 获取当前目录
 		homeDir, _ = os.Getwd()
 	}
 
-    // 在主目录下使用.config文件夹
+	// 在主目录下使用.config文件夹
 	homeDir = P.Join(homeDir, ".config", Name)
-	G.Infoln("homeDir...", homeDir)
-    // 默认
+	G.Infoln("homeDir...%s", homeDir)
+	// 默认
 	Path = &path{homeDir: homeDir, configFile: "config.yaml"}
 }
 

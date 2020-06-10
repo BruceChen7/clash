@@ -40,21 +40,23 @@ func SetUIPath(path string) {
 }
 
 func Start(addr string, secret string) {
-    log.Infoln("why not start")
-    log.Errorln("....", addr, "....", serverAddr)
+	log.Infoln("why not start")
+	log.Errorln("....", addr, "....", serverAddr)
+	// 被设置过，那么不在启动
 	if serverAddr != "" {
 		return
 	}
 
 	serverAddr = addr
 	serverSecret = secret
-    log.Infoln("....", addr, "....", serverAddr)
+	log.Infoln("....", addr, "....", serverAddr)
 
 	r := chi.NewRouter()
 
 	cors := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},
 		AllowedMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE"},
+		// 设置basic鉴权
 		AllowedHeaders: []string{"Content-Type", "Authorization"},
 		MaxAge:         300,
 	})
@@ -176,8 +178,10 @@ type Log struct {
 	Payload string `json:"payload"`
 }
 
+// 获取日志
 func getLogs(w http.ResponseWriter, r *http.Request) {
 	levelText := r.URL.Query().Get("level")
+	// 默认是info日志
 	if levelText == "" {
 		levelText = "info"
 	}

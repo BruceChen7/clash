@@ -22,7 +22,7 @@ import (
 
 // forward compatibility before 1.0
 func readRawConfig(path string) ([]byte, error) {
-    // 直接读取整个文件
+	// 直接读取整个文件
 	data, err := ioutil.ReadFile(path)
 	if err == nil && len(data) != 0 {
 		return data, nil
@@ -41,11 +41,11 @@ func readRawConfig(path string) ([]byte, error) {
 }
 
 func readConfig(path string) ([]byte, error) {
-    // 查看文件是否存在
+	// 查看文件是否存在
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		return nil, err
 	}
-    // 读取整个文件
+	// 读取整个文件
 	data, err := readRawConfig(path)
 	if err != nil {
 		return nil, err
@@ -65,7 +65,7 @@ func Parse() (*config.Config, error) {
 
 // ParseWithPath parse config with custom config path
 func ParseWithPath(path string) (*config.Config, error) {
-    // 读取配置文件
+	// 读取配置文件
 	buf, err := readConfig(path)
 	if err != nil {
 		return nil, err
@@ -171,6 +171,7 @@ func updateRules(rules []C.Rule) {
 
 func updateGeneral(general *config.General) {
 	log.SetLevel(general.LogLevel)
+	// 设置隧道的模式
 	tunnel.SetMode(general.Mode)
 
 	allowLan := general.AllowLan
@@ -183,6 +184,7 @@ func updateGeneral(general *config.General) {
 		log.Errorln("Start HTTP server error: %s", err.Error())
 	}
 
+	// 创建sock5
 	if err := P.ReCreateSocks(general.SocksPort); err != nil {
 		log.Errorln("Start SOCKS5 server error: %s", err.Error())
 	}

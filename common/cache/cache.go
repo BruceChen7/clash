@@ -20,6 +20,7 @@ type cache struct {
 
 type element struct {
 	Expired time.Time
+    // 任何类型的value
 	Payload interface{}
 }
 
@@ -34,6 +35,7 @@ func (c *cache) Put(key interface{}, payload interface{}, ttl time.Duration) {
 
 // Get element in Cache, and drop when it expired
 func (c *cache) Get(key interface{}) interface{} {
+    // 查看是否存在
 	item, exist := c.mapping.Load(key)
 	if !exist {
 		return nil

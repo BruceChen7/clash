@@ -93,8 +93,10 @@ type RawFallbackFilter struct {
 	IPCIDR []string `yaml:"ipcidr"`
 }
 
+// 使用yaml格式
 type RawConfig struct {
-	Port               int          `yaml:"port"`
+	Port int `yaml:"port"`
+	// SOCKS5 代理端口
 	SocksPort          int          `yaml:"socks-port"`
 	RedirPort          int          `yaml:"redir-port"`
 	Authentication     []string     `yaml:"authentication"`
@@ -136,8 +138,9 @@ func UnmarshalRawConfig(buf []byte) (*RawConfig, error) {
 	// config with some default value
 	// 默认的代理配置
 	rawCfg := &RawConfig{
-		AllowLan:       false,
-		BindAddress:    "*",
+		AllowLan:    false,
+		BindAddress: "*",
+		// 基于规则的模式
 		Mode:           T.Rule,
 		Authentication: []string{},
 		LogLevel:       log.INFO,
@@ -170,8 +173,7 @@ func UnmarshalRawConfig(buf []byte) (*RawConfig, error) {
 	if err := yaml.Unmarshal(buf, &rawCfg); err != nil {
 		return nil, err
 	}
-
-    log.Infoln("...port, ", rawCfg.Port)
+	log.Infoln("...port, ", rawCfg.Port)
 	return rawCfg, nil
 }
 

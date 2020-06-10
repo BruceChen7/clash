@@ -94,11 +94,13 @@ func TestObservable_SubscribeGoroutineLeak(t *testing.T) {
 	time.Sleep(120 * time.Millisecond)
 	init := runtime.NumGoroutine()
 	iter := iterator([]interface{}{1, 2, 3, 4, 5})
+	// 生成一个主题
 	src := NewObservable(iter)
 	max := 100
 
 	var list []Subscription
 	for i := 0; i < max; i++ {
+		// 多个订阅者订阅
 		ch, _ := src.Subscribe()
 		list = append(list, ch)
 	}

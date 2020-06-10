@@ -38,6 +38,7 @@ func init() {
 	flag.BoolVar(&testConfig, "t", false, "test configuration and exit")
 	flag.Parse()
 
+	// 短选项开关
 	flagset = map[string]bool{}
 	flag.Visit(func(f *flag.Flag) {
 		flagset[f.Name] = true
@@ -50,14 +51,18 @@ func main() {
 		return
 	}
 
+	//获取homDir的绝对路径
 	if homeDir != "" {
 		if !filepath.IsAbs(homeDir) {
 			currentDir, _ := os.Getwd()
+			log.Infoln("..currentDir...%s", currentDir)
 			homeDir = filepath.Join(currentDir, homeDir)
+			log.Infoln("..homeDir...%s", homeDir)
 		}
 		C.SetHomeDir(homeDir)
 	}
 
+	// 设置配置文件
 	if configFile != "" {
 		if !filepath.IsAbs(configFile) {
 			// 获取当前目录
@@ -69,10 +74,11 @@ func main() {
 	} else {
 		// 设置默认的文件路径
 		configFile := filepath.Join(C.Path.HomeDir(), C.Path.Config())
+		log.Infoln("..configFile...%s", configFile)
 		C.SetConfig(configFile)
 	}
 
-	// 创建目录
+	// 创建config.yaml和下载mmdb
 	if err := config.Init(C.Path.HomeDir()); err != nil {
 		log.Fatalln("Initial configuration directory error: %s", err.Error())
 	}
@@ -106,6 +112,7 @@ func main() {
 	}
 
 	sigCh := make(chan os.Signal, 1)
+	// 接收SIGTERM信号
 	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
 	<-sigCh
 }

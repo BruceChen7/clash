@@ -9,7 +9,7 @@ type Observable struct {
 	// 是一个只读的channel
 	iterable Iterable
 	// key 是只读的channel
-	// value是无限大d的buffer
+	// value是无限大的buffer
 	listener map[Subscription]*Subscriber
 	mux      sync.Mutex
 	done     bool

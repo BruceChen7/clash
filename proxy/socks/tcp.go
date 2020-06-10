@@ -19,6 +19,7 @@ type SockListener struct {
 	closed  bool
 }
 
+// 监听端口
 func NewSocksProxy(addr string) (*SockListener, error) {
 	l, err := net.Listen("tcp", addr)
 	if err != nil {
@@ -52,7 +53,9 @@ func (l *SockListener) Address() string {
 	return l.address
 }
 
+// 处理sock5协议
 func handleSocks(conn net.Conn) {
+	// 握手
 	target, command, err := socks5.ServerHandshake(conn, authStore.Authenticator())
 	if err != nil {
 		conn.Close()

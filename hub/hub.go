@@ -6,6 +6,7 @@ import (
 	"github.com/Dreamacro/clash/hub/route"
 )
 
+// 类似于函数指针
 type Option func(*config.Config)
 
 func WithExternalUI(externalUI string) Option {
@@ -28,11 +29,14 @@ func WithSecret(secret string) Option {
 
 // Parse call at the beginning of clash
 func Parse(options ...Option) error {
+	// 执行器进行解析，将clash默认的配置参数进行生成
 	cfg, err := executor.Parse()
 	if err != nil {
 		return err
 	}
 
+	// 根据选项注入相关选项, 主要是设置external_controller
+	// 和externalUI
 	for _, option := range options {
 		option(cfg)
 	}
@@ -42,6 +46,8 @@ func Parse(options ...Option) error {
 	}
 
 	if cfg.General.ExternalController != "" {
+		// 启动restful http接口
+		// 用来改变默认的配置
 		go route.Start(cfg.General.ExternalController, cfg.General.Secret)
 	}
 

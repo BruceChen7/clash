@@ -107,9 +107,13 @@ func ServerHandshake(rw net.Conn, authenticator auth.Authenticator) (addr Addr, 
 	// Read RFC 1928 for request and reply structure and sizes.
 	buf := make([]byte, MaxAddrLen)
 	// read VER, NMETHODS, METHODS
+	// 保证读取前2个字节
+	// 第一给字节是版本
+	// 第二个自己为方法字节数
 	if _, err = io.ReadFull(rw, buf[:2]); err != nil {
 		return
 	}
+	// methods部分的字节数
 	nmethods := buf[1]
 	if _, err = io.ReadFull(rw, buf[:nmethods]); err != nil {
 		return
@@ -117,6 +121,7 @@ func ServerHandshake(rw net.Conn, authenticator auth.Authenticator) (addr Addr, 
 
 	// write VER METHOD
 	if authenticator != nil {
+		// 使用sock5，基于用户名和密码来认证
 		if _, err = rw.Write([]byte{5, 2}); err != nil {
 			return
 		}
@@ -130,11 +135,14 @@ func ServerHandshake(rw net.Conn, authenticator auth.Authenticator) (addr Addr, 
 		authBuf := make([]byte, MaxAuthLen)
 		// Get username
 		userLen := int(header[1])
+		// 用户名长度为0
 		if userLen <= 0 {
+			// 直接返回认证错误
 			rw.Write([]byte{1, 1})
 			err = ErrAuth
 			return
 		}
+		// 读取指定的用户名
 		if _, err = io.ReadFull(rw, authBuf[:userLen]); err != nil {
 			return
 		}
@@ -155,28 +163,33 @@ func ServerHandshake(rw net.Conn, authenticator auth.Authenticator) (addr Addr, 
 		}
 		pass := string(authBuf[:passLen])
 
-		// Verify
+		// Verify，比较用户名和密码
 		if ok := authenticator.Verify(string(user), string(pass)); !ok {
+			// 1 表示失败
 			rw.Write([]byte{1, 1})
 			err = ErrAuth
 			return
 		}
 
 		// Response auth state
+		// 表示成功
 		if _, err = rw.Write([]byte{1, 0}); err != nil {
 			return
 		}
 	} else {
+		// 不需要认证
 		if _, err = rw.Write([]byte{5, 0}); err != nil {
 			return
 		}
 	}
 
 	// read VER CMD RSV ATYP DST.ADDR DST.PORT
+	//  再一次读取客户端的
 	if _, err = io.ReadFull(rw, buf[:3]); err != nil {
 		return
 	}
 
+	// command为第二个字节
 	command = buf[1]
 	addr, err = ReadAddr(rw, buf)
 	if err != nil {
@@ -194,6 +207,7 @@ func ServerHandshake(rw net.Conn, authenticator auth.Authenticator) (addr Addr, 
 			_, err = rw.Write(bytes.Join([][]byte{{5, 0, 0}, localAddr}, []byte{}))
 		}
 	case CmdBind:
+		//  强制执行后面的代码
 		fallthrough
 	default:
 		err = ErrCommandNotSupported
@@ -271,7 +285,7 @@ func ReadAddr(r io.Reader, b []byte) (Addr, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	//  绑定地址类型
 	switch b[0] {
 	case AtypDomainName:
 		_, err = io.ReadFull(r, b[1:2]) // read 2nd byte for domain length

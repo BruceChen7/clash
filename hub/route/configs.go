@@ -14,6 +14,7 @@ import (
 	"github.com/go-chi/render"
 )
 
+// 用来更新配置的http接口
 func configRouter() http.Handler {
 	r := chi.NewRouter()
 	r.Get("/", getConfigs)

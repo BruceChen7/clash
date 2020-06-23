@@ -19,7 +19,7 @@ type SockListener struct {
 	closed  bool
 }
 
-// 监听端口
+// 创建sock5的 proxy
 func NewSocksProxy(addr string) (*SockListener, error) {
 	l, err := net.Listen("tcp", addr)
 	if err != nil {
@@ -61,6 +61,7 @@ func handleSocks(conn net.Conn) {
 		conn.Close()
 		return
 	}
+	// tcp层保持keep-alive
 	conn.(*net.TCPConn).SetKeepAlive(true)
 	if command == socks5.CmdUDPAssociate {
 		defer conn.Close()
